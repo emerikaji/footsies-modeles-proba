@@ -21,7 +21,7 @@ Block is limited to three uses per round against Attacks, as will be covered in 
 Interaction can be summarized by this chart:
 ![Interaction between possible actions](spec.drawio.png)
 
-Attack wins only against Grabs, and if a player lands two attacks in succession, they win. If the opponent Blocks, the game continues. If the opponent Dragon Punches, the player loses.
+Attack wins only against Grabs, and if a player lands two attacks in succession, they win. If the opponent Blocks, the game continues and one use of Block is deducted from them. If the opponent Dragon Punches, the player loses.
 
 Block completely stops both Attacks and Dragon Punches. If the opponent Attacks, the game continues, and one use is consumed, out of three per round. If the opponent Dragon Punches, the player counters it and wins. If the opponent grabs, the player loses.
 
