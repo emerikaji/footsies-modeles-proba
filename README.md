@@ -32,11 +32,22 @@ Finally, Dragon Punches are special attacks that win instantly against Attacks a
 
 # Implementation
 
-In this repo is a simple implementation of the game in Go, which can be toggled to be against a real opponent for testing, or against a random opponent.
+The game is implemented inside the `game.py` file, then experimented on in the `footsies.ipynb` notebook.
 
-Any recent version of go should be able to run the code, as no dependencies are involved. Go version 1.24 or above is recommended.
+## Problems encountered
 
-To run the game, simply use the command : 
-```sh
-go run .
+### Nash Player
+
+One of the first strategies we tried to implement as a simple solution was establishing a Nash Equilibrium, a set of probabilities for each move calculated using linear programming from what's called a payoff matrix. To be more specific, a Nash Equilibrium is a set of stragegies for both players from which neither would want to deviate.
+
+In our case, the obtained payoff matrix looked like this :
+```py
+np.array([
+    [  0,  1, -1,  1],   # Attack       vs (Attack, Block, Grab, Dragon Punch)
+    [ -1,  0,  1, -1],   # Block        vs (Attack, Block, Grab, Dragon Punch)
+    [  1, -1,  0,  1],   # Grab         vs (Attack, Block, Grab, Dragon Punch)
+    [  1, -1,  1,  0],   # Dragon Punch vs (Attack, Block, Grab, Dragon Punch)
+])
 ```
+
+In terms of game theory, it is considered "degenerate" : There exists situations in which two responses could be best. This is why it's considered a bluffing game, since if our game had a designated best option for every other option, it would amount to rock-paper-scissors (with an extra choice). However, as we weren't aware before digging deeper, this actually makes the computation of a Nash Equilibrium impossible, since in most situations, players will want to change up their options. As such, we dropped this player type.

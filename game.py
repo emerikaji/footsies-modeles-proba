@@ -1,10 +1,26 @@
 from abc import ABC,abstractmethod
-from typing import Callable
+from dataclasses import dataclass
 
 class Move:
     def __init__(self, value: int, name: str):
         self.value = value
         self.name = name
+
+@dataclass
+class State:
+    other_previous_move: Move
+    own_blocks: int
+    other_blocks: int
+    own_has_attack: bool
+    other_has_attack: bool
+    rounds_left: int
+
+MoveSelection = {
+    "a": Move(1, "Attack"),
+    "b": Move(2, "Block"),
+    "g": Move(4, "Grab"),
+    "dp": Move(8, "Dragon Punch")
+}
 
 class Player(ABC):
     @property
@@ -13,7 +29,7 @@ class Player(ABC):
         pass
 
     @abstractmethod
-    def act(self, own_blocks: int, other_blocks: int, own_has_attack: bool, other_has_attack: bool, rounds_left: int) -> Move:
+    def act(self, game_state: State) -> Move:
         pass
 
 class Footsies:
@@ -29,6 +45,8 @@ class Footsies:
         self.p2_has_attack = False
         self.p1_lose = False
         self.p2_lose = False
+        self.p1_previous: Move = None
+        self.p2_previous: Move = None
 
         self.timeout = False
         self.timeout_rounds = 0
@@ -56,8 +74,13 @@ class Footsies:
             condition = no_timeout
 
         while condition():
-            move1 = self.p1.act(self.p1_blocks, self.p2_blocks, self.p1_has_attack, self.p2_has_attack, self.timeout_rounds-self.current_round)
-            move2 = self.p2.act(self.p2_blocks, self.p1_blocks, self.p2_has_attack, self.p1_has_attack, self.timeout_rounds-self.current_round)
+            rounds_left = self.timeout_rounds - self.current_round
+            p1_state = State(self.p2_previous, self.p1_blocks, self.p2_blocks, self.p1_has_attack, self.p2_has_attack, rounds_left)
+            p2_state = State(self.p1_previous, self.p2_blocks, self.p1_blocks, self.p2_has_attack, self.p1_has_attack, rounds_left)
+            move1 = self.p1.act(p1_state)
+            move2 = self.p2.act(p2_state)
+            self.p1_previous = move1
+            self.p2_previous = move2
 
             print(f"{self.p1.name} chose {move1.name}. {self.p2.name} chose {move2.name}.")
 
