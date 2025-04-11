@@ -4,7 +4,7 @@ Adversarial turn-based game inspired by the fighting game Footsies.
 
 ## Basic rules
 
-A round happens in successive turns, where each of the players select an option. How the options interact determines whether the game continues for another turn, or ends with one of the players winning. Playing the game can happen over multiple rounds or a single one.
+A round happens in successive turns, where each of the players select an option. How the options interact determines whether the game continues for another turn, or ends with one of the players winning. Playing the game can happen over multiple turns or a single one.
 
 ## Actions
 
@@ -51,3 +51,9 @@ np.array([
 ```
 
 In terms of game theory, it is considered "degenerate" : There exists situations in which two responses could be best. This is why it's considered a bluffing game, since if our game had a designated best option for every other option, it would amount to rock-paper-scissors (with an extra choice). However, as we weren't aware before digging deeper, this actually makes the computation of a Nash Equilibrium impossible, since in most situations, players will want to change up their options. As such, we dropped this player type.
+
+### MCTS
+
+We also tried implementing a fairly standard algorithm for games, the Monte Carlo Tree Search, that runs simulations a few moves deep for every game state encountered in order to obtain the move with the best chance of winning.
+
+While this works in typical game design, notably more deterministic games, it flat out wouldn't function with our game, simply calculating that blocking was the best move every time. It technically isn't wrong as blocking is only vulnerable to one option, grabbing, but failed to take into account the limited amount of attacks that could be blocked, and the fact that other options also give better reward.
